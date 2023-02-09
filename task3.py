@@ -1,7 +1,10 @@
+from time import sleep
+
 import requests
 from bs4 import BeautifulSoup
 
-WEBSITE = "https://greenatom.ru/"
+
+WEBSITE = "https://greenatom.ru"
 
 HEADER = {
   'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
@@ -19,27 +22,43 @@ HEADER = {
 
 
 def get_html(website: str) -> str:
+    """
+    Получает html страницу в формате str,
+    в случае недоступности сервера райзит ошибку.
+    """
     session = requests.Session()
     session.headers = HEADER
     r = session.get(website)
+    if r.reason != 'OK':
+        raise requests.exceptions.RequestException
     return r.text
 
 
 def get_numbers_tags(html: str) -> tuple[int, int]:
+    """
+    Получает на вход html страницу, подсчитывает
+    количество тегов и тегов с атрибутами.
+    """
     soup = BeautifulSoup(html, "html.parser")
     tags = soup.find_all()
-    count1 = 0
-    count2 = 0
+    count_tags = 0
+    count_tags_attrs = 0
 
     for tag in tags:
         if tag.attrs:
-            count2 += 1
-        count1 += 1
-    return count1, count2
+            count_tags_attrs += 1
+        count_tags += 1
+    return count_tags, count_tags_attrs
 
 
 def main() -> None:
-    html = get_html(WEBSITE)
+    """Главная функция, точка входа."""
+    try:
+        html = get_html(WEBSITE)
+    except requests.exceptions.RequestException as error:
+        print(error)
+        sleep(10)
+        main()
     result = get_numbers_tags(html)
     print(
         f"Количество тегов: {result[0]};\n"
@@ -49,60 +68,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# import requests
-# from bs4 import BeautifulSoup as Bs
-# from fake_useragent import UserAgent
-#
-#
-# def get_html(url: str) -> object:
-#     ua = UserAgent()
-#     headers = {'User-Agent': ua.chrome}
-#
-#     try:
-#         page = requests.get(url, headers=headers)
-#         page.raise_for_status()
-#     except requests.exceptions.RequestException as error:
-#         return error
-#
-#     html = Bs(page.text, 'html.parser')
-#     return html.find('html')
-#
-#
-# def tags_quantity(tag: object, count: int, attrs: bool = False) -> int:
-#     if tag.name:
-#         if attrs and tag.attrs:
-#             count += 1
-#         elif not attrs:
-#             count += 1
-#
-#         for child in tag.children:
-#             count = tags_quantity(child, count, attrs)
-#
-#     return count
-#
-#
-# if __name__ == '__main__':
-#     url = 'https://greenatom.ru/'
-#     html = get_html(url)
-#
-#     print('All tags quantity:', tags_quantity(html, 0))
-#     print(
-#         'Quantity of tags with attributes:',
-#         tags_quantity(html, 0, attrs=True)
-#     )
