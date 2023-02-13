@@ -41,6 +41,7 @@ def get_comparison_result(ver_a: list[str], ver_b: list[str]) -> int:
 
 
 def main():
+    """Главная функция, точка входа."""
     ver_a, ver_b = get_initial_data()
     validate_initial_data(ver_a, ver_b)
 
