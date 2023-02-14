@@ -71,4 +71,4 @@ _Написать функцию на Python, выполняющую сравн�
 
 #### Backend developer
 
-[Владмир Максимов](https://github.com/MaksimovVS) @MaksimovVS
+[Владмир Максимов](https://github.com/MaksimovVS) [@MaksimovVS](https://t.me/MaksimovVS)
