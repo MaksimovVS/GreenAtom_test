@@ -44,6 +44,7 @@ def main():
     """Главная функция, точка входа."""
     ver_a, ver_b = get_initial_data()
     validate_initial_data(ver_a, ver_b)
+    print(get_comparison_result(ver_a, ver_b))
 
 
 if __name__ == "__main__":
